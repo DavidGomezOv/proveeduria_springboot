@@ -1,6 +1,6 @@
-package com.example.demo.repository;
+package com.example.proveeduria_api.repository;
 
-import com.example.demo.models.NotificationModel;
+import com.example.proveeduria_api.models.NotificationModel;
 import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 

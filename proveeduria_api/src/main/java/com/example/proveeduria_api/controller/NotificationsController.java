@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package com.example.proveeduria_api.controller;
 
-import com.example.demo.models.NotificationModel;
-import com.example.demo.service.NotificationsService;
+import com.example.proveeduria_api.models.NotificationModel;
+import com.example.proveeduria_api.service.NotificationsService;
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;

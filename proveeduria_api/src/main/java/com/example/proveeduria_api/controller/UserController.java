@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package com.example.proveeduria_api.controller;
 
-import com.example.demo.models.UserModel;
-import com.example.demo.service.UserService;
+import com.example.proveeduria_api.models.UserModel;
+import com.example.proveeduria_api.service.UserService;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 

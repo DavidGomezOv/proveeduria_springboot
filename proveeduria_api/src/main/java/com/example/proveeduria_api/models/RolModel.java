@@ -1,4 +1,4 @@
-package com.example.demo.models;
+package com.example.proveeduria_api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;

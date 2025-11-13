@@ -1,7 +1,7 @@
-package com.example.demo.service;
+package com.example.proveeduria_api.service;
 
-import com.example.demo.models.UserModel;
-import com.example.demo.repository.UserRepository;
+import com.example.proveeduria_api.models.UserModel;
+import com.example.proveeduria_api.repository.UserRepository;
 import java.util.List;
 import org.springframework.stereotype.Service;
 

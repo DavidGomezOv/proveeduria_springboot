@@ -1,4 +1,4 @@
-package com.example.demo.models;
+package com.example.proveeduria_api.models;
 
 import jakarta.persistence.*;
 import java.time.LocalDateTime;

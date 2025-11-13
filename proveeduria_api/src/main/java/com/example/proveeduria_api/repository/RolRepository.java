@@ -1,6 +1,6 @@
-package com.example.demo.repository;
+package com.example.proveeduria_api.repository;
 
-import com.example.demo.models.RolModel;
+import com.example.proveeduria_api.models.RolModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**

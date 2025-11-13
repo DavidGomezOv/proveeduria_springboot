@@ -1,7 +1,7 @@
-package com.example.demo.controller;
+package com.example.proveeduria_api.controller;
 
-import com.example.demo.models.RolModel;
-import com.example.demo.service.RolService;
+import com.example.proveeduria_api.models.RolModel;
+import com.example.proveeduria_api.service.RolService;
 import java.util.List;
 import org.springframework.web.bind.annotation.*;
 
