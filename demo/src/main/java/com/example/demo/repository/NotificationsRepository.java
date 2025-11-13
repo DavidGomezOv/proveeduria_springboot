@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.demo.repository;
 
 import com.example.demo.models.NotificationModel;
@@ -9,11 +5,15 @@ import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 /**
- *
- * @author Megan
+ * Repositorio JPA para la entidad NotificationModel.
+ * Permite realizar operaciones CRUD sobre la tabla de notificaciones.
  */
 public interface NotificationsRepository extends JpaRepository<NotificationModel, Long> {
     
-    // Busca todas las notificaciones por id de usuario
+    /**
+     * Busca todas las notificaciones asociadas a un usuario.
+     * @param idUsuario ID del usuario.
+     * @return lista de notificaciones del usuario.
+     */
     List<NotificationModel> findByIdUsuario(Long idUsuario);
 }

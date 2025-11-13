@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.demo.service;
 
 import com.example.demo.models.UserModel;
@@ -10,20 +6,26 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 /**
- *
- * @author Megan
+ * Servicio que maneja la lógica de negocio relacionada con los usuarios.
  */
 @Service
 public class UserService {
     
     private final UserRepository repository;
 
+    /**
+     * Inyección del repositorio de usuarios.
+     * @param repository repositorio JPA de usuarios
+     */
     public UserService(UserRepository repository) {
         this.repository = repository;
     }
 
+    /**
+     * Obtiene todos los usuarios registrados.
+     * @return lista de usuarios
+     */
     public List<UserModel> getAll() {
         return repository.findAll();
     }
-    
 }

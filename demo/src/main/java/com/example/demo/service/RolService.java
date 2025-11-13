@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.demo.service;
 
 import com.example.demo.models.RolModel;
@@ -10,23 +6,26 @@ import java.util.List;
 import org.springframework.stereotype.Service;
 
 /**
- *
- * @author Megan
+ * Servicio que maneja la lógica de negocio relacionada con los roles.
  */
 @Service
 public class RolService {
 
     private final RolRepository repository;
 
+    /**
+     * Inyección del repositorio de roles.
+     * @param repository repositorio JPA de roles
+     */
     public RolService(RolRepository repository) {
         this.repository = repository;
     }
 
+    /**
+     * Obtiene todos los roles registrados.
+     * @return lista de roles
+     */
     public List<RolModel> getAll() {
         return repository.findAll();
-    }
-
-    public RolModel getById(Long id) {
-        return repository.findById(id).orElse(null);
     }
 }

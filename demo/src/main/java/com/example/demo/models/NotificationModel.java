@@ -1,35 +1,27 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.demo.models;
 
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
+import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- *
- * @author Megan
+ * Entidad que representa una notificación enviada a un usuario.
+ * Mapea la tabla "Notificacion" de la base de datos.
  */
 @Entity
 @Table(name = "Notificacion", schema = "dbo")
 public class NotificationModel {
+
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_notificacion")
     private Long id;
-    
+
     @Column(name = "id_orden")
     private Long idOrden;
-    
+
     @Column(name = "id_usuario")
     private Long idUsuario;
-    
+
     @Column(name = "id_estadorevision")
     private Long idEstadoRevision;
 
@@ -39,6 +31,7 @@ public class NotificationModel {
     @Column(name = "mensaje")
     private String mensaje;
 
+    /** ID de la notificación. */
     public Long getId() {
         return id;
     }
@@ -47,6 +40,7 @@ public class NotificationModel {
         this.id = id;
     }
 
+    /** ID de la orden asociada a la notificación. */
     public Long getIdOrden() {
         return idOrden;
     }
@@ -55,7 +49,8 @@ public class NotificationModel {
         this.idOrden = idOrden;
     }
 
-    public Long getIdUusario() {
+    /** ID del usuario que recibe la notificación. */
+    public Long getIdUsuario() {
         return idUsuario;
     }
 
@@ -63,6 +58,7 @@ public class NotificationModel {
         this.idUsuario = idUsuario;
     }
 
+    /** ID del estado de revisión asociado. */
     public Long getIdEstadoRevision() {
         return idEstadoRevision;
     }
@@ -71,6 +67,7 @@ public class NotificationModel {
         this.idEstadoRevision = idEstadoRevision;
     }
 
+    /** Fecha y hora en que se envió la notificación. */
     public LocalDateTime getFechaEnvio() {
         return fechaEnvio;
     }
@@ -79,6 +76,7 @@ public class NotificationModel {
         this.fechaEnvio = fechaEnvio;
     }
 
+    /** Mensaje del contenido de la notificación. */
     public String getMensaje() {
         return mensaje;
     }
@@ -86,6 +84,4 @@ public class NotificationModel {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
-    
-    
 }

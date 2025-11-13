@@ -1,15 +1,11 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.demo.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 
 /**
- *
- * @author Megan
+ * Entidad que representa una sesión de usuario.
+ * Mapea la tabla "Sesion" en la base de datos.
  */
 @Entity
 @Table(name = "Sesion", schema = "dbo")
@@ -23,11 +19,13 @@ public class SessionModel {
     @Column(name = "estado_sesion")
     private String sessionStatus;
 
+    // Relación uno a uno con el usuario correspondiente
     @OneToOne
     @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
     @JsonBackReference
     private UserModel user;
 
+    /** ID de la sesión. */
     public Long getId() {
         return id;
     }
@@ -36,6 +34,7 @@ public class SessionModel {
         this.id = id;
     }
 
+    /** Estado actual de la sesión (Activa o Inactiva.). */
     public String getSessionStatus() {
         return sessionStatus;
     }
@@ -44,6 +43,7 @@ public class SessionModel {
         this.sessionStatus = sessionStatus;
     }
 
+    /** Usuario al que pertenece la sesión. */
     public UserModel getUser() {
         return user;
     }
@@ -51,6 +51,4 @@ public class SessionModel {
     public void setUser(UserModel user) {
         this.user = user;
     }
-    
-    
 }

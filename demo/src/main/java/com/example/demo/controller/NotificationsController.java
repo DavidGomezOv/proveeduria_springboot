@@ -1,7 +1,3 @@
-/*
- * Click nbfs://nbhost/SystemFileSystem/Templates/Licenses/license-default.txt to change this license
- * Click nbfs://nbhost/SystemFileSystem/Templates/Classes/Class.java to edit this template
- */
 package com.example.demo.controller;
 
 import com.example.demo.models.NotificationModel;
@@ -14,22 +10,29 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 /**
- *
- * @author Megan
+ * Controlador REST para gestionar las notificaciones de los usuarios.
  */
 @RestController
 @RequestMapping("/api/notifications")
 @CrossOrigin(origins = "*")
-
-
 public class NotificationsController {
+
     private final NotificationsService service;
 
+    /**
+     * Inyección del servicio de notificaciones.
+     * @param service servicio que maneja la lógica de notificaciones.
+     */
     public NotificationsController(NotificationsService service) {
         this.service = service;
     }
-    
-     @GetMapping("/usuario/{idUsuario}")
+
+    /**
+     * Obtiene las notificaciones de un usuario por su ID.
+     * @param idUsuario ID del usuario.
+     * @return lista de notificaciones del usuario.
+     */
+    @GetMapping("/usuario/{idUsuario}")
     public List<NotificationModel> obtenerNotificacionesPorUsuario(@PathVariable Long idUsuario) {
         return service.getNotificationsPerUser(idUsuario);
     }
