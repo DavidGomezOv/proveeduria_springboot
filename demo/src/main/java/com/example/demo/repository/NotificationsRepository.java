@@ -4,10 +4,16 @@
  */
 package com.example.demo.repository;
 
+import com.example.demo.models.NotificationModel;
+import java.util.List;
+import org.springframework.data.jpa.repository.JpaRepository;
+
 /**
  *
  * @author Megan
  */
-public class NotificationsRepository {
+public interface NotificationsRepository extends JpaRepository<NotificationModel, Long> {
     
+    // Busca todas las notificaciones por id de usuario
+    List<NotificationModel> findByIdUsuario(Long idUsuario);
 }

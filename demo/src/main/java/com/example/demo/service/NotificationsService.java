@@ -4,10 +4,25 @@
  */
 package com.example.demo.service;
 
+import com.example.demo.models.NotificationModel;
+import com.example.demo.repository.NotificationsRepository;
+import java.util.List;
+import org.springframework.stereotype.Service;
+
 /**
  *
  * @author Mergan
  */
+@Service
 public class NotificationsService {
     
+    private final NotificationsRepository repository;
+
+    public NotificationsService(NotificationsRepository repository) {
+        this.repository = repository;
+    }
+  
+    public List<NotificationModel> getNotificationsPerUser (Long idUsuario) {
+        return repository.findByIdUsuario(idUsuario);
+    }
 }
