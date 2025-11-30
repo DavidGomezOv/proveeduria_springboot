@@ -4,8 +4,8 @@ import com.fasterxml.jackson.annotation.JsonManagedReference;
 import jakarta.persistence.*;
 
 /**
- * Entidad que representa un usuario del sistema.
- * Mapea la tabla "Usuario" en la base de datos.
+ * Entidad que representa un usuario del sistema. Mapea la tabla "Usuario" en la
+ * base de datos.
  */
 @Entity
 @Table(name = "Usuario", schema = "dbo")
@@ -22,21 +22,29 @@ public class UserModel {
     @Column(name = "nombre")
     private String nombre;
 
+    @Column(name = "apellidos")
+    private String apellidos;
+
     @Column(name = "correo")
     private String correo;
 
     // Relación uno a uno con la sesión del usuario
-    @OneToOne(mappedBy = "user")
+    @OneToOne(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
     @JsonManagedReference
     private SessionModel sesion;
-    
+
     // Relación muchos a uno con el rol asignado al usuario
     @ManyToOne
     @JoinColumn(name = "id_rol")
     @JsonManagedReference
     private RolModel rol;
-    
-    /** ID del usuario. */
+
+    @Column(name = "contrasena")
+    private String contrasena;
+
+    /**
+     * ID del usuario.
+     */
     public Long getId() {
         return id;
     }
@@ -45,7 +53,9 @@ public class UserModel {
         this.id = id;
     }
 
-    /** Cédula o identificación del usuario. */
+    /**
+     * Cédula o identificación del usuario.
+     */
     public Long getCedula() {
         return cedula;
     }
@@ -54,7 +64,9 @@ public class UserModel {
         this.cedula = cedula;
     }
 
-    /** Nombre completo del usuario. */
+    /**
+     * Nombre completo del usuario.
+     */
     public String getNombre() {
         return nombre;
     }
@@ -63,7 +75,17 @@ public class UserModel {
         this.nombre = nombre;
     }
 
-    /** Correo electrónico del usuario. */
+    public String getApellidos() {
+        return apellidos;
+    }
+
+    public void setApellidos(String apellidos) {
+        this.apellidos = apellidos;
+    }
+
+    /**
+     * Correo electrónico del usuario.
+     */
     public String getCorreo() {
         return correo;
     }
@@ -72,7 +94,9 @@ public class UserModel {
         this.correo = correo;
     }
 
-    /** Sesión actual del usuario. */
+    /**
+     * Sesión actual del usuario.
+     */
     public SessionModel getSesion() {
         return sesion;
     }
@@ -81,12 +105,22 @@ public class UserModel {
         this.sesion = sesion;
     }
 
-    /** Rol asignado al usuario. */
+    /**
+     * Rol asignado al usuario.
+     */
     public RolModel getRol() {
         return rol;
     }
 
     public void setRol(RolModel rol) {
         this.rol = rol;
+    }
+
+    public String getContrasena() {
+        return contrasena;
+    }
+
+    public void setContrasena(String contrasena) {
+        this.contrasena = contrasena;
     }
 }
