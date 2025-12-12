@@ -50,7 +50,7 @@ public class UserController {
      * @return SessionModel actualizada o 404 si no existe sesión
      */
     @PutMapping("/{idUsuario}/session")
-    public ResponseEntity<?> updateSessionStatus(@PathVariable Long idUsuario,
+    public ResponseEntity<?> updateSessionStatus(@PathVariable Integer idUsuario,
             @RequestParam("estado") String estado) {
         try {
             SessionModel updated = sessionService.updateSessionStatusIfExists(idUsuario, estado);

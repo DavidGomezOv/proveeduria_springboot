@@ -15,7 +15,7 @@ public class RolModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_rol")
-    private Long id;
+    private Integer id;
 
     @Column(name = "nombre_rol")
     private String nombre;
@@ -26,11 +26,11 @@ public class RolModel {
     private List<UserModel> usuarios;
 
     /** ID del rol. */
-    public Long getIdRol() {
+    public Integer getIdRol() {
         return id;
     }
 
-    public void setIdRol(Long id) {
+    public void setIdRol(Integer id) {
         this.id = id;
     }
 

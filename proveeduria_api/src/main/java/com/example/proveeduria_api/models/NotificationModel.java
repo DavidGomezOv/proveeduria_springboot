@@ -14,16 +14,16 @@ public class NotificationModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_notificacion")
-    private Long id;
+    private Integer id;
 
     @Column(name = "id_orden")
-    private Long idOrden;
+    private Integer idOrden;
 
     @Column(name = "id_usuario")
-    private Long idUsuario;
+    private Integer idUsuario;
 
     @Column(name = "id_estadorevision")
-    private Long idEstadoRevision;
+    private Integer idEstadoRevision;
 
     @Column(name = "fecha_envio")
     private LocalDateTime fechaEnvio;
@@ -32,38 +32,38 @@ public class NotificationModel {
     private String mensaje;
 
     /** ID de la notificación. */
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
     /** ID de la orden asociada a la notificación. */
-    public Long getIdOrden() {
+    public Integer getIdOrden() {
         return idOrden;
     }
 
-    public void setIdOrden(Long idOrden) {
+    public void setIdOrden(Integer idOrden) {
         this.idOrden = idOrden;
     }
 
     /** ID del usuario que recibe la notificación. */
-    public Long getIdUsuario() {
+    public Integer getIdUsuario() {
         return idUsuario;
     }
 
-    public void setIdUsuario(Long idUsuario) {
+    public void setIdUsuario(Integer idUsuario) {
         this.idUsuario = idUsuario;
     }
 
     /** ID del estado de revisión asociado. */
-    public Long getIdEstadoRevision() {
+    public Integer getIdEstadoRevision() {
         return idEstadoRevision;
     }
 
-    public void setIdEstadoRevision(Long idEstadoRevision) {
+    public void setIdEstadoRevision(Integer idEstadoRevision) {
         this.idEstadoRevision = idEstadoRevision;
     }
 

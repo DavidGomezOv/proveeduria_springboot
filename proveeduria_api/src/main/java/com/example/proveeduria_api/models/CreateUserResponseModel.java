@@ -6,15 +6,15 @@ package com.example.proveeduria_api.models;
 
 public class CreateUserResponseModel {
 
-    private Long id;
+    private Integer id;
     private Long cedula;
     private String nombre;
     private String correo;
     private String rol;
-    private Long idSesion;
+    private Integer idSesion;
     private String sessionStatus;
 
-    public CreateUserResponseModel(Long id, Long cedula, String nombre, String correo, String rol, Long idSesion, String sessionStatus) {
+    public CreateUserResponseModel(Integer id, Long cedula, String nombre, String correo, String rol, Integer idSesion, String sessionStatus) {
         this.id = id;
         this.cedula = cedula;
         this.nombre = nombre;
@@ -25,7 +25,7 @@ public class CreateUserResponseModel {
     }
 
     // getters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
@@ -45,7 +45,7 @@ public class CreateUserResponseModel {
         return rol;
     }
 
-    public Long getIdSesion() {
+    public Integer getIdSesion() {
         return idSesion;
     }
 

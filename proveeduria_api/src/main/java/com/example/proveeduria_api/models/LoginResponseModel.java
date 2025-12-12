@@ -10,13 +10,13 @@ package com.example.proveeduria_api.models;
  */
 public class LoginResponseModel {
 
-    private Long id;
+    private Integer id;
     private Long cedula;
     private String nombre;
     private String correo;
     private String rol;
 
-    public LoginResponseModel(Long id, Long cedula, String nombre, String correo, String rol) {
+    public LoginResponseModel(Integer id, Long cedula, String nombre, String correo, String rol) {
         this.id = id;
         this.cedula = cedula;
         this.nombre = nombre;
@@ -25,11 +25,11 @@ public class LoginResponseModel {
     }
 
     // getters y setters
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

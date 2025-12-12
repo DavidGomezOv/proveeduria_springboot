@@ -32,7 +32,7 @@ public class SessionService {
      * @throws IllegalStateException si no existe sesión para el usuario
      */
     @Transactional
-    public SessionModel updateSessionStatusIfExists(Long userId, String newStatus) {
+    public SessionModel updateSessionStatusIfExists(Integer userId, String newStatus) {
         Optional<SessionModel> optSession = sessionRepository.findByUserId(userId);
 
         SessionModel session = optSession.orElseThrow(

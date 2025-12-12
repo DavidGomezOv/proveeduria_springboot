@@ -16,5 +16,5 @@ public interface SessionRepository extends JpaRepository<SessionModel, Long> {
      * @param userId id del usuario
      * @return Optional con la sesión si existe
      */
-    Optional<SessionModel> findByUserId(Long userId);
+    Optional<SessionModel> findByUserId(Integer userId);
 }

@@ -14,7 +14,7 @@ public class SessionModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_sesion")
-    private Long id;
+    private Integer id;
 
     @Column(name = "estado_sesion")
     private String sessionStatus;
@@ -26,11 +26,11 @@ public class SessionModel {
     private UserModel user;
 
     /** ID de la sesión. */
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 

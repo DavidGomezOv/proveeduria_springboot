@@ -14,7 +14,7 @@ public class UserModel {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "id_usuario")
-    private Long id;
+    private Integer id;
 
     @Column(name = "cedula")
     private Long cedula;
@@ -39,17 +39,22 @@ public class UserModel {
     @JsonManagedReference
     private RolModel rol;
 
+    @ManyToOne
+    @JoinColumn(name = "id_rango")
+    @JsonManagedReference
+    private FinancialRangeModel rango;
+
     @Column(name = "contrasena")
     private String contrasena;
 
     /**
      * ID del usuario.
      */
-    public Long getId() {
+    public Integer getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(Integer id) {
         this.id = id;
     }
 
@@ -114,6 +119,14 @@ public class UserModel {
 
     public void setRol(RolModel rol) {
         this.rol = rol;
+    }
+
+    public FinancialRangeModel getRango() {
+        return rango;
+    }
+
+    public void setRango(FinancialRangeModel rango) {
+        this.rango = rango;
     }
 
     public String getContrasena() {
