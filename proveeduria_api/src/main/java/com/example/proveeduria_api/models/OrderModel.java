@@ -5,7 +5,6 @@
 package com.example.proveeduria_api.models;
 
 import com.fasterxml.jackson.annotation.JsonBackReference;
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -13,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import java.math.BigDecimal;
 import java.time.LocalDateTime;
@@ -32,15 +30,16 @@ public class OrderModel {
     @JsonBackReference
     private UserModel user;
 
-    @Column(name = "fecha_creacion")
+    @ManyToOne()
+    @JoinColumn(name = "id_rango", referencedColumnName = "id_rango")
+    @JsonBackReference
+    private FinancialRangeModel financialRangeModel;
+
+    @Column(name = "fecha_creacion", insertable = false, updatable = false)
     private LocalDateTime creationDate;
 
     @Column(name = "monto_total")
     private BigDecimal totalAmount;
-
-    @OneToOne(mappedBy = "order", cascade = CascadeType.ALL, orphanRemoval = true)
-    @JsonBackReference
-    private RevisionModel revision;
 
     public Integer getId() {
         return id;
@@ -58,6 +57,14 @@ public class OrderModel {
         this.user = user;
     }
 
+    public FinancialRangeModel getFinancialRangeModel() {
+        return financialRangeModel;
+    }
+
+    public void setFinancialRangeModel(FinancialRangeModel financialRangeModel) {
+        this.financialRangeModel = financialRangeModel;
+    }
+
     public LocalDateTime getCreationDate() {
         return creationDate;
     }
@@ -72,14 +79,6 @@ public class OrderModel {
 
     public void setTotalAmount(BigDecimal totalAmount) {
         this.totalAmount = totalAmount;
-    }
-
-    public RevisionModel getRevision() {
-        return revision;
-    }
-
-    public void setRevision(RevisionModel revision) {
-        this.revision = revision;
     }
 
 }

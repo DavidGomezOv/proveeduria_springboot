@@ -48,28 +48,32 @@ public class UserService {
     }
 
     /**
-     * Crea un usuario: valida correo único, hashea contrasena, asigna rol y crea
-     * sesión inicial "Inactiva". Retorna UserResponse con info (sin contrasena).
+     * Crea un usuario: valida correo único, hashea contrasena, asigna rol y
+     * crea sesión inicial "Inactiva". Retorna UserResponse con info (sin
+     * contrasena).
+     *
+     * @param requestModel
+     * @return
      */
     @Transactional
-    public CreateUserResponseModel createUser(CreateUserRequestModel req) {
+    public CreateUserResponseModel createUser(CreateUserRequestModel requestModel) {
 
-        if (userRepository.findByCorreo(req.getCorreo()).isPresent()) {
+        if (userRepository.findByCorreo(requestModel.getCorreo()).isPresent()) {
             throw new IllegalArgumentException("Ya existe un usuario con ese correo");
         }
 
         // crear entidad UserModel
         UserModel user = new UserModel();
-        user.setCedula(req.getCedula());
-        user.setNombre(req.getNombre());
-        user.setApellidos(req.getApellidos());
-        user.setCorreo(req.getCorreo());
-        user.setContrasena(passwordEncoder.encode(req.getContrasena()));
+        user.setCedula(requestModel.getCedula());
+        user.setNombre(requestModel.getNombre());
+        user.setApellidos(requestModel.getApellidos());
+        user.setCorreo(requestModel.getCorreo());
+        user.setContrasena(passwordEncoder.encode(requestModel.getContrasena()));
 
         // asignar rol si viene rolId
-        if (req.getRolId() != null) {
-            RolModel rol = rolRepository.findById(req.getRolId())
-                    .orElseThrow(() -> new IllegalArgumentException("Rol no encontrado: " + req.getRolId()));
+        if (requestModel.getRolId() != null) {
+            RolModel rol = rolRepository.findById(requestModel.getRolId())
+                    .orElseThrow(() -> new IllegalArgumentException("Rol no encontrado: " + requestModel.getRolId()));
             user.setRol(rol);
         }
 

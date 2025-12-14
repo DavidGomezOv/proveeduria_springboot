@@ -27,4 +27,29 @@ public class FinancialRangeModel {
     @Column(name = "rango_max")
     private BigDecimal max;
 
+    public Integer getId() {
+        return id;
+    }
+
+    public void setId(Integer id) {
+        this.id = id;
+    }
+
+    public BigDecimal getMin() {
+        return min;
+    }
+
+    public void setMin(BigDecimal min) {
+        this.min = min;
+    }
+
+    public BigDecimal getMax() {
+        return max;
+    }
+
+    public void setMax(BigDecimal max) {
+        this.max = max;
+    }
+
+    
 }

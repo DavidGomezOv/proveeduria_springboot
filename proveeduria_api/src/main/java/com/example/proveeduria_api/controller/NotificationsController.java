@@ -33,7 +33,7 @@ public class NotificationsController {
      * @return lista de notificaciones del usuario.
      */
     @GetMapping("/{idUsuario}")
-    public List<NotificationModel> obtenerNotificacionesPorUsuario(@PathVariable Long idUsuario) {
+    public List<NotificationModel> obtenerNotificacionesPorUsuario(@PathVariable Integer idUsuario) {
         return service.getNotificationsPerUser(idUsuario);
     }
 }

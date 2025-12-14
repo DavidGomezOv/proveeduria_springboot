@@ -4,20 +4,12 @@
  */
 package com.example.proveeduria_api.models;
 
-import java.math.BigDecimal;
+import java.util.List;
 
 public class CreateOrderRequestModel {
 
-    private BigDecimal orderAmount;
     private Integer userId;
-
-    public BigDecimal getOrderAmount() {
-        return orderAmount;
-    }
-
-    public void setOrderAmount(BigDecimal orderAmount) {
-        this.orderAmount = orderAmount;
-    }
+    private List<CreateOrderProductsRequestModel> products;
 
     public Integer getUserId() {
         return userId;
@@ -25,6 +17,14 @@ public class CreateOrderRequestModel {
 
     public void setUserId(Integer userId) {
         this.userId = userId;
+    }
+
+    public List<CreateOrderProductsRequestModel> getProducts() {
+        return products;
+    }
+
+    public void setProducts(List<CreateOrderProductsRequestModel> products) {
+        this.products = products;
     }
 
 }

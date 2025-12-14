@@ -4,13 +4,24 @@
  */
 package com.example.proveeduria_api.service;
 
+import com.example.proveeduria_api.models.CreateOrderRequestModel;
+import com.example.proveeduria_api.models.FinancialRangeModel;
+import com.example.proveeduria_api.models.NotificationModel;
+import com.example.proveeduria_api.models.OrderDetailModel;
 import com.example.proveeduria_api.models.OrderModel;
-import com.example.proveeduria_api.models.OrderResponseModel;
+import com.example.proveeduria_api.models.ProductModel;
 import com.example.proveeduria_api.models.RevisionModel;
+import com.example.proveeduria_api.models.StatusModel;
+import com.example.proveeduria_api.models.UserModel;
+import com.example.proveeduria_api.repository.FinancialRangeRepository;
 import com.example.proveeduria_api.repository.NotificationsRepository;
+import com.example.proveeduria_api.repository.OrdersDetailRepository;
 import com.example.proveeduria_api.repository.OrdersRepository;
+import com.example.proveeduria_api.repository.ProductsRepository;
 import com.example.proveeduria_api.repository.RevisionRepository;
-import java.util.ArrayList;
+import com.example.proveeduria_api.repository.StatusRepository;
+import com.example.proveeduria_api.repository.UserRepository;
+import java.math.BigDecimal;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -20,34 +31,81 @@ public class OrdersService {
     private final OrdersRepository ordersRepository;
     private final RevisionRepository revisionRepository;
     private final NotificationsRepository notificationsRepository;
+    private final OrdersDetailRepository ordersDetailRepository;
 
-    public OrdersService(OrdersRepository ordersRepository, RevisionRepository revisionRepository, NotificationsRepository notificationsRepository) {
+    private final FinancialRangeRepository financialRangeRepository;
+    private final StatusRepository statusRepository;
+    private final UserRepository userRepository;
+    private final ProductsRepository productsRepository;
+
+    public OrdersService(OrdersRepository ordersRepository, RevisionRepository revisionRepository, NotificationsRepository notificationsRepository, FinancialRangeRepository financialRangeRepository, StatusRepository statusRepository, UserRepository userRepository, OrdersDetailRepository ordersDetailRepository, ProductsRepository productsRepository) {
         this.ordersRepository = ordersRepository;
         this.revisionRepository = revisionRepository;
         this.notificationsRepository = notificationsRepository;
+        this.financialRangeRepository = financialRangeRepository;
+        this.statusRepository = statusRepository;
+        this.userRepository = userRepository;
+        this.ordersDetailRepository = ordersDetailRepository;
+        this.productsRepository = productsRepository;
     }
 
-    
-    public List<OrderResponseModel> getAllOrderResponses() {
+    public List<OrderModel> getOrdersByUserId(Integer idUsuario) {
+        return ordersRepository.findByUser_Id(idUsuario);
+    }
 
-        List<OrderModel> orders = ordersRepository.findAll();
+    public Boolean createOrder(CreateOrderRequestModel requestModel) {
 
-        List<OrderResponseModel> responseList = new ArrayList<>();
+        UserModel user = userRepository.findById(Long.valueOf(requestModel.getUserId().toString())).orElseThrow(() -> new IllegalArgumentException("Invalid user"));
 
-        for (OrderModel order : orders) {
+        BigDecimal orderTotalAmount = BigDecimal.ZERO;
 
-            RevisionModel revision = order.getRevision();
+        for (var product : requestModel.getProducts()) {
+            ProductModel productToSave = productsRepository.findById(Long.valueOf(product.getProductId())).orElseThrow(() -> new IllegalArgumentException("Invalid product"));
 
-            OrderResponseModel dto = new OrderResponseModel(
-                    order.getId(),
-                    order.getTotalAmount(),
-                    revision.getComentario(),
-                    revision.getStatus().getStatus()
-            );
+            BigDecimal subtotal = productToSave.getPrice().multiply(BigDecimal.valueOf(product.getQuantity()));
 
-            responseList.add(dto);
+            orderTotalAmount = orderTotalAmount.add(subtotal);
         }
 
-        return responseList;
+        System.out.println("TOTAL AMOUNT " + orderTotalAmount);
+
+        FinancialRangeModel range = financialRangeRepository.findByMinLessThanEqualAndMaxGreaterThanEqual(orderTotalAmount, orderTotalAmount).orElseThrow(() -> new IllegalArgumentException("Invalid amount"));
+        StatusModel status = statusRepository.findById(1L).orElseThrow(() -> new IllegalArgumentException("Status error"));
+
+        OrderModel orderModel = new OrderModel();
+        orderModel.setTotalAmount(orderTotalAmount);
+        orderModel.setFinancialRangeModel(range);
+        orderModel.setUser(user);
+
+        ordersRepository.save(orderModel);
+
+        requestModel.getProducts().forEach((product) -> {
+            ProductModel productToSave = productsRepository.findById(Long.valueOf(product.getProductId())).orElseThrow(() -> new IllegalArgumentException("Invalid product"));
+
+            OrderDetailModel orderDetailModel = new OrderDetailModel();
+            orderDetailModel.setOrder(orderModel);
+            orderDetailModel.setProduct(productToSave);
+            orderDetailModel.setQuantity(product.getQuantity());
+
+            ordersDetailRepository.save(orderDetailModel);
+        });
+
+        NotificationModel notificationModel = new NotificationModel();
+        notificationModel.setUser(user);
+        notificationModel.setOrder(orderModel);
+        notificationModel.setStatus(status);
+        notificationModel.setMensaje("Orden creada exitosamente!");
+
+        notificationsRepository.save(notificationModel);
+
+        RevisionModel revisionModel = new RevisionModel();
+        revisionModel.setOrder(orderModel);
+        revisionModel.setUser(user);
+        revisionModel.setStatus(status);
+        revisionModel.setComentario("Orden creada");
+
+        revisionRepository.save(revisionModel);
+
+        return true;
     }
 }

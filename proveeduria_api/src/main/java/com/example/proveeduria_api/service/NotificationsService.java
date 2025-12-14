@@ -26,7 +26,7 @@ public class NotificationsService {
      * @param idUsuario ID del usuario
      * @return lista de notificaciones
      */
-    public List<NotificationModel> getNotificationsPerUser(Long idUsuario) {
-        return repository.findByIdUsuario(idUsuario);
+    public List<NotificationModel> getNotificationsPerUser(Integer idUsuario) {
+        return repository.findByUser_Id(idUsuario);
     }
 }

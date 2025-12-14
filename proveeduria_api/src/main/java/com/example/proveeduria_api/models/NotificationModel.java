@@ -1,11 +1,12 @@
 package com.example.proveeduria_api.models;
 
+import com.fasterxml.jackson.annotation.JsonBackReference;
 import jakarta.persistence.*;
 import java.time.LocalDateTime;
 
 /**
- * Entidad que representa una notificación enviada a un usuario.
- * Mapea la tabla "Notificacion" de la base de datos.
+ * Entidad que representa una notificación enviada a un usuario. Mapea la tabla
+ * "Notificacion" de la base de datos.
  */
 @Entity
 @Table(name = "Notificacion", schema = "dbo")
@@ -16,22 +17,27 @@ public class NotificationModel {
     @Column(name = "id_notificacion")
     private Integer id;
 
-    @Column(name = "id_orden")
-    private Integer idOrden;
+    @ManyToOne()
+    @JoinColumn(name = "id_usuario", referencedColumnName = "id_usuario")
+    @JsonBackReference
+    private UserModel user;
 
-    @Column(name = "id_usuario")
-    private Integer idUsuario;
+    @OneToOne
+    @JoinColumn(name = "id_orden", referencedColumnName = "id_orden")
+    @JsonBackReference
+    private OrderModel order;
 
-    @Column(name = "id_estadorevision")
-    private Integer idEstadoRevision;
+    @OneToOne
+    @JoinColumn(name = "id_estado", referencedColumnName = "id_estado")
+    @JsonBackReference
+    private StatusModel status;
 
-    @Column(name = "fecha_envio")
-    private LocalDateTime fechaEnvio;
+    @Column(name = "fecha_envio", insertable = false, updatable = false)
+    private LocalDateTime sentDate;
 
     @Column(name = "mensaje")
     private String mensaje;
 
-    /** ID de la notificación. */
     public Integer getId() {
         return id;
     }
@@ -40,43 +46,38 @@ public class NotificationModel {
         this.id = id;
     }
 
-    /** ID de la orden asociada a la notificación. */
-    public Integer getIdOrden() {
-        return idOrden;
+    public UserModel getUser() {
+        return user;
     }
 
-    public void setIdOrden(Integer idOrden) {
-        this.idOrden = idOrden;
+    public void setUser(UserModel user) {
+        this.user = user;
     }
 
-    /** ID del usuario que recibe la notificación. */
-    public Integer getIdUsuario() {
-        return idUsuario;
+    public OrderModel getOrder() {
+        return order;
     }
 
-    public void setIdUsuario(Integer idUsuario) {
-        this.idUsuario = idUsuario;
+    public void setOrder(OrderModel order) {
+        this.order = order;
     }
 
-    /** ID del estado de revisión asociado. */
-    public Integer getIdEstadoRevision() {
-        return idEstadoRevision;
+    public StatusModel getStatus() {
+        return status;
     }
 
-    public void setIdEstadoRevision(Integer idEstadoRevision) {
-        this.idEstadoRevision = idEstadoRevision;
+    public void setStatus(StatusModel status) {
+        this.status = status;
     }
 
-    /** Fecha y hora en que se envió la notificación. */
-    public LocalDateTime getFechaEnvio() {
-        return fechaEnvio;
+    public LocalDateTime getSentDate() {
+        return sentDate;
     }
 
-    public void setFechaEnvio(LocalDateTime fechaEnvio) {
-        this.fechaEnvio = fechaEnvio;
+    public void setSentDate(LocalDateTime sentDate) {
+        this.sentDate = sentDate;
     }
 
-    /** Mensaje del contenido de la notificación. */
     public String getMensaje() {
         return mensaje;
     }
@@ -84,4 +85,5 @@ public class NotificationModel {
     public void setMensaje(String mensaje) {
         this.mensaje = mensaje;
     }
+
 }

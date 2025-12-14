@@ -4,11 +4,9 @@
  */
 package com.example.proveeduria_api.repository;
 
-import com.example.proveeduria_api.models.OrderModel;
-import java.util.List;
+import com.example.proveeduria_api.models.OrderDetailModel;
 import org.springframework.data.jpa.repository.JpaRepository;
 
-public interface OrdersRepository extends JpaRepository<OrderModel, Long> {
+public interface OrdersDetailRepository extends JpaRepository<OrderDetailModel, Long> {
 
-    List<OrderModel> findByUser_Id(Integer idUsuario);
 }

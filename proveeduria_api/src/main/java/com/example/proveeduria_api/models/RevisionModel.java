@@ -12,6 +12,8 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToOne;
+import jakarta.persistence.PrePersist;
+import jakarta.persistence.PreUpdate;
 import jakarta.persistence.Table;
 import java.time.LocalDateTime;
 
@@ -83,6 +85,16 @@ public class RevisionModel {
 
     public void setRevisionDate(LocalDateTime revisionDate) {
         this.revisionDate = revisionDate;
+    }
+    
+    @PrePersist
+    public void onCreate() {
+        this.revisionDate = LocalDateTime.now();
+    }
+
+    @PreUpdate
+    public void onUpdate() {
+        this.revisionDate = LocalDateTime.now();
     }
 
     public String getComentario() {
