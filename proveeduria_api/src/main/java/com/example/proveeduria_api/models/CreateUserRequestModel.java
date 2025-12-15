@@ -16,6 +16,7 @@ public class CreateUserRequestModel {
     private String correo;
     private String contrasena;
     private Long rolId;
+    private Long financialRangeId;
 
     // getters y setters
     public Long getCedula() {
@@ -64,6 +65,14 @@ public class CreateUserRequestModel {
 
     public void setRolId(Long rolId) {
         this.rolId = rolId;
+    }
+
+    public Long getFinancialRangeId() {
+        return financialRangeId;
+    }
+
+    public void setFinancialRangeId(Long financialRangeId) {
+        this.financialRangeId = financialRangeId;
     }
 
 }

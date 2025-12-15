@@ -40,7 +40,7 @@ public class UserModel {
     private RolModel rol;
 
     @ManyToOne
-    @JoinColumn(name = "id_rango")
+    @JoinColumn(name = "id_rango", nullable = true)
     @JsonManagedReference
     private FinancialRangeModel rango;
 

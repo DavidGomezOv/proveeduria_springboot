@@ -2,9 +2,11 @@ package com.example.proveeduria_api.service;
 
 import com.example.proveeduria_api.models.CreateUserRequestModel;
 import com.example.proveeduria_api.models.CreateUserResponseModel;
+import com.example.proveeduria_api.models.FinancialRangeModel;
 import com.example.proveeduria_api.models.RolModel;
 import com.example.proveeduria_api.models.SessionModel;
 import com.example.proveeduria_api.models.UserModel;
+import com.example.proveeduria_api.repository.FinancialRangeRepository;
 import com.example.proveeduria_api.repository.RolRepository;
 import com.example.proveeduria_api.repository.SessionRepository;
 import com.example.proveeduria_api.repository.UserRepository;
@@ -22,6 +24,7 @@ public class UserService {
     private final UserRepository userRepository;
     private final SessionRepository sessionRepository;
     private final RolRepository rolRepository;
+    private final FinancialRangeRepository financialRangeRepository;
     private final BCryptPasswordEncoder passwordEncoder;
 
     /**
@@ -29,13 +32,12 @@ public class UserService {
      *
      * @param repository repositorio JPA de usuarios
      */
-    public UserService(UserRepository userRepository,
-            RolRepository rolRepository,
-            SessionRepository sessionRepository) {
+    public UserService(UserRepository userRepository, RolRepository rolRepository, SessionRepository sessionRepository, FinancialRangeRepository financialRangeRepository) {
         this.userRepository = userRepository;
         this.rolRepository = rolRepository;
         this.sessionRepository = sessionRepository;
         this.passwordEncoder = new BCryptPasswordEncoder();
+        this.financialRangeRepository = financialRangeRepository;
     }
 
     /**
@@ -70,10 +72,15 @@ public class UserService {
         user.setCorreo(requestModel.getCorreo());
         user.setContrasena(passwordEncoder.encode(requestModel.getContrasena()));
 
+        if (requestModel.getFinancialRangeId() != null) {
+            FinancialRangeModel financialRangeModel = financialRangeRepository.findById(requestModel.getFinancialRangeId()).orElseThrow(() -> new IllegalArgumentException("Invalid range"));
+            user.setRango(financialRangeModel);
+        }
+
         // asignar rol si viene rolId
         if (requestModel.getRolId() != null) {
             RolModel rol = rolRepository.findById(requestModel.getRolId())
-                    .orElseThrow(() -> new IllegalArgumentException("Rol no encontrado: " + requestModel.getRolId()));
+                    .orElseThrow(() -> new IllegalArgumentException("Invalid rol: " + requestModel.getRolId()));
             user.setRol(rol);
         }
 

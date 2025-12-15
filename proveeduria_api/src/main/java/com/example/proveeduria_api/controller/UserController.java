@@ -51,7 +51,7 @@ public class UserController {
      */
     @PutMapping("/{idUsuario}/session")
     public ResponseEntity<?> updateSessionStatus(@PathVariable Integer idUsuario,
-            @RequestParam("estado") String estado) {
+            @RequestParam("status") String estado) {
         try {
             SessionModel updated = sessionService.updateSessionStatusIfExists(idUsuario, estado);
             return ResponseEntity.ok(updated);

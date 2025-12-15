@@ -32,6 +32,7 @@ public class AuthController {
      * Login: valida credenciales y estado de sesión.
      *
      * @param req { "correo": "...", "contrasena": "..." }
+     * @return 
      */
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequestModel req) {

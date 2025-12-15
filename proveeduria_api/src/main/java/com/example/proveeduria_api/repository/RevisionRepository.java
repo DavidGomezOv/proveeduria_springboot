@@ -9,4 +9,6 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RevisionRepository extends JpaRepository<RevisionModel, Long> {
 
+    RevisionModel findByOrder_Id(Integer idOrder);
+    
 }

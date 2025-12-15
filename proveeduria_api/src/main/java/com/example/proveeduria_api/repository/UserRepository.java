@@ -1,6 +1,8 @@
 package com.example.proveeduria_api.repository;
 
+import com.example.proveeduria_api.models.FinancialRangeModel;
 import com.example.proveeduria_api.models.UserModel;
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
 
@@ -17,4 +19,8 @@ public interface UserRepository extends JpaRepository<UserModel, Long> {
      * @return UserModel
      */
     Optional<UserModel> findByCorreo(String correo);
+    
+    List<UserModel> findByRango(FinancialRangeModel rango);
+    
+    List<UserModel> findByRol_Id(Integer idRol);
 }

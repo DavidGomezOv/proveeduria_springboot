@@ -16,4 +16,6 @@ public interface NotificationsRepository extends JpaRepository<NotificationModel
      * @return lista de notificaciones del usuario.
      */
     List<NotificationModel> findByUser_Id(Integer idUsuario);
+    
+    NotificationModel findByOrder_Id(Integer idOrder);
 }
