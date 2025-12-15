@@ -5,10 +5,12 @@
 package com.example.proveeduria_api.repository;
 
 import com.example.proveeduria_api.models.RevisionModel;
+import java.util.List;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 public interface RevisionRepository extends JpaRepository<RevisionModel, Long> {
 
     RevisionModel findByOrder_Id(Integer idOrder);
     
+    List<RevisionModel> findByUser_Id(Integer idUser);
 }

@@ -148,6 +148,44 @@ public class OrdersService {
 
         return orders;
     }
+    
+    public List<OrderResponseModel> getOrdersByApproverId(Integer idUsuario) {
+        
+        List<RevisionModel> revisionsByUserId = revisionRepository.findByUser_Id(idUsuario);
+
+        List<OrderResponseModel> orders = new ArrayList<>();
+
+        for (var revision : revisionsByUserId) {
+            OrderModel order = revision.getOrder();
+            
+            List<OrderDetailModel> orderDetailsByOrderId = ordersDetailRepository.findByOrder_Id(order.getId());
+            
+            List<OrderProductsResponseModel> orderProducts = new ArrayList<>();
+            for (var orderDetail : orderDetailsByOrderId) {
+                OrderProductsResponseModel product = new OrderProductsResponseModel();
+                product.setName(orderDetail.getProduct().getName());
+                product.setPrice(orderDetail.getProduct().getPrice());
+                product.setQuantity(orderDetail.getQuantity());
+                
+                orderProducts.add(product);
+            }
+            
+            RevisionModel revisionModel = revisionRepository.findByOrder_Id(order.getId());
+
+            OrderResponseModel orderResponseModel = new OrderResponseModel();
+
+            orderResponseModel.setOrderId(order.getId());
+            orderResponseModel.setTotalAmmount(order.getTotalAmount());
+            orderResponseModel.setBuyerName(order.getUser().getNombre() + " " + order.getUser().getApellidos());
+            orderResponseModel.setComments(revisionModel.getComentario());
+            orderResponseModel.setStatus(revisionModel.getStatus());
+            orderResponseModel.setProducts(orderProducts);
+
+            orders.add(orderResponseModel);
+        }
+
+        return orders;
+    }
 
     public void updateOrderStatus(Integer orderId, Integer newStatusId, String comments) {
 

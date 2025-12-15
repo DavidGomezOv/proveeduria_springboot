@@ -42,9 +42,14 @@ public class OrdersController {
         }
     }
 
-    @GetMapping("/{idUsuario}")
+    @GetMapping("/buyer/{idUsuario}")
     public List<OrderResponseModel> getOrdersByUserId(@PathVariable Integer idUsuario) {
         return service.getOrdersByUserId(idUsuario);
+    }
+    
+    @GetMapping("/approver/{idApprover}")
+    public List<OrderResponseModel> getOrdersByApproverId(@PathVariable Integer idApprover) {
+        return service.getOrdersByApproverId(idApprover);
     }
     
     @PutMapping("/{idOrder}")
