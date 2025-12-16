@@ -186,6 +186,49 @@ public class OrdersService {
 
         return orders;
     }
+    
+    public List<OrderResponseModel> getApprovedOrRejectedOrders() {
+        
+        List<RevisionModel> revisionsByUserId = revisionRepository.findAll();
+
+        List<OrderResponseModel> orders = new ArrayList<>();
+
+        for (var revision : revisionsByUserId) {
+            OrderModel order = revision.getOrder();
+            
+            RevisionModel revisionModel = revisionRepository.findByOrder_Id(order.getId());
+
+            if (revision.getStatus().getId() == 1) {
+                continue;
+            }
+            
+            OrderResponseModel orderResponseModel = new OrderResponseModel();
+
+            orderResponseModel.setOrderId(order.getId());
+            orderResponseModel.setTotalAmmount(order.getTotalAmount());
+            orderResponseModel.setBuyerName(order.getUser().getNombre() + " " + order.getUser().getApellidos());
+            orderResponseModel.setComments(revisionModel.getComentario());
+            orderResponseModel.setStatus(revisionModel.getStatus());
+            
+            List<OrderDetailModel> orderDetailsByOrderId = ordersDetailRepository.findByOrder_Id(order.getId());
+            
+            List<OrderProductsResponseModel> orderProducts = new ArrayList<>();
+            for (var orderDetail : orderDetailsByOrderId) {
+                OrderProductsResponseModel product = new OrderProductsResponseModel();
+                product.setName(orderDetail.getProduct().getName());
+                product.setPrice(orderDetail.getProduct().getPrice());
+                product.setQuantity(orderDetail.getQuantity());
+                
+                orderProducts.add(product);
+            }
+            
+            orderResponseModel.setProducts(orderProducts);
+
+            orders.add(orderResponseModel);
+        }
+
+        return orders;
+    }
 
     public void updateOrderStatus(Integer orderId, Integer newStatusId, String comments) {
 

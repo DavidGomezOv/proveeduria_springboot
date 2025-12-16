@@ -52,6 +52,11 @@ public class OrdersController {
         return service.getOrdersByApproverId(idApprover);
     }
     
+    @GetMapping("history")
+    public List<OrderResponseModel> getApprovedOrRejectedOrders() {
+        return service.getApprovedOrRejectedOrders();
+    }
+    
     @PutMapping("/{idOrder}")
     public ResponseEntity<?> updateOrderStatus(@PathVariable Integer idOrder, @RequestParam("status") Integer statusId, @RequestParam("comments") String comments) {
         try {
