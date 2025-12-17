@@ -158,6 +158,20 @@ public class OrdersService {
         for (var revision : revisionsByUserId) {
             OrderModel order = revision.getOrder();
             
+            RevisionModel revisionModel = revisionRepository.findByOrder_Id(order.getId());
+
+            if (revision.getStatus().getId() == 6) {
+                continue;
+            }
+            
+            OrderResponseModel orderResponseModel = new OrderResponseModel();
+
+            orderResponseModel.setOrderId(order.getId());
+            orderResponseModel.setTotalAmmount(order.getTotalAmount());
+            orderResponseModel.setBuyerName(order.getUser().getNombre() + " " + order.getUser().getApellidos());
+            orderResponseModel.setComments(revisionModel.getComentario());
+            orderResponseModel.setStatus(revisionModel.getStatus());
+            
             List<OrderDetailModel> orderDetailsByOrderId = ordersDetailRepository.findByOrder_Id(order.getId());
             
             List<OrderProductsResponseModel> orderProducts = new ArrayList<>();
@@ -170,15 +184,6 @@ public class OrdersService {
                 orderProducts.add(product);
             }
             
-            RevisionModel revisionModel = revisionRepository.findByOrder_Id(order.getId());
-
-            OrderResponseModel orderResponseModel = new OrderResponseModel();
-
-            orderResponseModel.setOrderId(order.getId());
-            orderResponseModel.setTotalAmmount(order.getTotalAmount());
-            orderResponseModel.setBuyerName(order.getUser().getNombre() + " " + order.getUser().getApellidos());
-            orderResponseModel.setComments(revisionModel.getComentario());
-            orderResponseModel.setStatus(revisionModel.getStatus());
             orderResponseModel.setProducts(orderProducts);
 
             orders.add(orderResponseModel);
@@ -235,8 +240,8 @@ public class OrdersService {
         RevisionModel revisionModel = revisionRepository.findByOrder_Id(orderId);
         StatusModel statusModel = statusRepository.findById(Long.valueOf(newStatusId)).orElseThrow(() -> new IllegalArgumentException("Invalid status"));
 
-        // Solo cuando la orden es aprobada por el aprobador jefe ya que debe pasar a un aprobador financiero
-        if (revisionModel.getStatus().getId() == 1 && newStatusId == 3) {
+        // Solo cuando la orden es aprobada o rechazada por el aprobador jefe ya que debe pasar a un aprobador financiero
+        if (revisionModel.getStatus().getId() == 1 && (newStatusId == 3 || newStatusId == 5)) {
 
             OrderModel orderModel = ordersRepository.findById(Long.valueOf(orderId)).orElseThrow(() -> new IllegalArgumentException("Invalid order"));
 
