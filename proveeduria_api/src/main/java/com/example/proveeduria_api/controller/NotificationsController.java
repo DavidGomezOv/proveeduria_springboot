@@ -1,6 +1,6 @@
 package com.example.proveeduria_api.controller;
 
-import com.example.proveeduria_api.models.NotificationModel;
+import com.example.proveeduria_api.models.NotificationResponseModel;
 import com.example.proveeduria_api.service.NotificationsService;
 import java.util.List;
 import org.springframework.web.bind.annotation.CrossOrigin;
@@ -33,7 +33,7 @@ public class NotificationsController {
      * @return lista de notificaciones del usuario.
      */
     @GetMapping("/{idUsuario}")
-    public List<NotificationModel> obtenerNotificacionesPorUsuario(@PathVariable Integer idUsuario) {
+    public List<NotificationResponseModel> obtenerNotificacionesPorUsuario(@PathVariable Integer idUsuario) {
         return service.getNotificationsPerUser(idUsuario);
     }
 }

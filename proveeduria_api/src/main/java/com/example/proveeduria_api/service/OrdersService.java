@@ -27,6 +27,7 @@ import java.math.BigDecimal;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
+import org.springframework.scheduling.annotation.Async;
 import org.springframework.stereotype.Service;
 
 @Service
@@ -42,7 +43,9 @@ public class OrdersService {
     private final UserRepository userRepository;
     private final ProductsRepository productsRepository;
 
-    public OrdersService(OrdersRepository ordersRepository, RevisionRepository revisionRepository, NotificationsRepository notificationsRepository, FinancialRangeRepository financialRangeRepository, StatusRepository statusRepository, UserRepository userRepository, OrdersDetailRepository ordersDetailRepository, ProductsRepository productsRepository) {
+    private final EmailService emailService;
+
+    public OrdersService(OrdersRepository ordersRepository, RevisionRepository revisionRepository, NotificationsRepository notificationsRepository, FinancialRangeRepository financialRangeRepository, StatusRepository statusRepository, UserRepository userRepository, OrdersDetailRepository ordersDetailRepository, ProductsRepository productsRepository, EmailService emailService) {
         this.ordersRepository = ordersRepository;
         this.revisionRepository = revisionRepository;
         this.notificationsRepository = notificationsRepository;
@@ -51,6 +54,7 @@ public class OrdersService {
         this.userRepository = userRepository;
         this.ordersDetailRepository = ordersDetailRepository;
         this.productsRepository = productsRepository;
+        this.emailService = emailService;
     }
 
     public void createOrder(CreateOrderRequestModel requestModel) {
@@ -110,28 +114,51 @@ public class OrdersService {
         revisionModel.setComentario("Orden creada");
 
         revisionRepository.save(revisionModel);
+
+        String subject = String.format("🎉 Orden de Compra #%d Creada Exitosamente", orderModel.getId());
+        String body = String.format(
+                "Estimado(a) %s,\n\nSu orden de compra #%d ha sido creada con éxito.\n"
+                + "Monto Total: %s\nEstado Inicial: %s\n\n"
+                + "Se ha asignado a %s para su revisión inicial.",
+                user.getNombre(),
+                orderModel.getId(),
+                orderModel.getTotalAmount().toString(),
+                status.getStatus(),
+                chiefApproverUser.getNombre() // El aprobador asignado en el proceso de creación
+        );
+
+        sendEmailAsync(orderModel.getId(), user.getCorreo(), subject, body);
+
+        // También puedes notificar al aprobador jefe asignado:
+        String approverSubject = String.format("🚨 Nueva Orden #%d Pendiente de Revisión", orderModel.getId());
+        String approverBody = String.format(
+                "Estimado(a) %s,\n\nSe le ha asignado la orden de compra #%d para su revisión. Monto: %s.",
+                chiefApproverUser.getNombre(),
+                orderModel.getId(),
+                orderModel.getTotalAmount().toString()
+        );
+        sendEmailAsync(orderModel.getId(), chiefApproverUser.getCorreo(), approverSubject, approverBody);
     }
-    
+
     public List<OrderResponseModel> getOrdersByUserId(Integer idUsuario) {
         List<OrderModel> ordersByUserId = ordersRepository.findByUser_Id(idUsuario);
-        
 
         List<OrderResponseModel> orders = new ArrayList<>();
 
         for (var order : ordersByUserId) {
-            
+
             List<OrderDetailModel> orderDetailsByOrderId = ordersDetailRepository.findByOrder_Id(order.getId());
-            
+
             List<OrderProductsResponseModel> orderProducts = new ArrayList<>();
             for (var orderDetail : orderDetailsByOrderId) {
                 OrderProductsResponseModel product = new OrderProductsResponseModel();
                 product.setName(orderDetail.getProduct().getName());
                 product.setPrice(orderDetail.getProduct().getPrice());
                 product.setQuantity(orderDetail.getQuantity());
-                
+
                 orderProducts.add(product);
             }
-            
+
             RevisionModel revisionModel = revisionRepository.findByOrder_Id(order.getId());
 
             OrderResponseModel orderResponseModel = new OrderResponseModel();
@@ -148,22 +175,22 @@ public class OrdersService {
 
         return orders;
     }
-    
+
     public List<OrderResponseModel> getOrdersByApproverId(Integer idUsuario) {
-        
+
         List<RevisionModel> revisionsByUserId = revisionRepository.findByUser_Id(idUsuario);
 
         List<OrderResponseModel> orders = new ArrayList<>();
 
         for (var revision : revisionsByUserId) {
             OrderModel order = revision.getOrder();
-            
+
             RevisionModel revisionModel = revisionRepository.findByOrder_Id(order.getId());
 
             if (revision.getStatus().getId() == 6) {
                 continue;
             }
-            
+
             OrderResponseModel orderResponseModel = new OrderResponseModel();
 
             orderResponseModel.setOrderId(order.getId());
@@ -171,19 +198,19 @@ public class OrdersService {
             orderResponseModel.setBuyerName(order.getUser().getNombre() + " " + order.getUser().getApellidos());
             orderResponseModel.setComments(revisionModel.getComentario());
             orderResponseModel.setStatus(revisionModel.getStatus());
-            
+
             List<OrderDetailModel> orderDetailsByOrderId = ordersDetailRepository.findByOrder_Id(order.getId());
-            
+
             List<OrderProductsResponseModel> orderProducts = new ArrayList<>();
             for (var orderDetail : orderDetailsByOrderId) {
                 OrderProductsResponseModel product = new OrderProductsResponseModel();
                 product.setName(orderDetail.getProduct().getName());
                 product.setPrice(orderDetail.getProduct().getPrice());
                 product.setQuantity(orderDetail.getQuantity());
-                
+
                 orderProducts.add(product);
             }
-            
+
             orderResponseModel.setProducts(orderProducts);
 
             orders.add(orderResponseModel);
@@ -191,22 +218,22 @@ public class OrdersService {
 
         return orders;
     }
-    
+
     public List<OrderResponseModel> getApprovedOrRejectedOrders() {
-        
+
         List<RevisionModel> revisionsByUserId = revisionRepository.findAll();
 
         List<OrderResponseModel> orders = new ArrayList<>();
 
         for (var revision : revisionsByUserId) {
             OrderModel order = revision.getOrder();
-            
+
             RevisionModel revisionModel = revisionRepository.findByOrder_Id(order.getId());
 
             if (revision.getStatus().getId() == 1) {
                 continue;
             }
-            
+
             OrderResponseModel orderResponseModel = new OrderResponseModel();
 
             orderResponseModel.setOrderId(order.getId());
@@ -214,19 +241,19 @@ public class OrdersService {
             orderResponseModel.setBuyerName(order.getUser().getNombre() + " " + order.getUser().getApellidos());
             orderResponseModel.setComments(revisionModel.getComentario());
             orderResponseModel.setStatus(revisionModel.getStatus());
-            
+
             List<OrderDetailModel> orderDetailsByOrderId = ordersDetailRepository.findByOrder_Id(order.getId());
-            
+
             List<OrderProductsResponseModel> orderProducts = new ArrayList<>();
             for (var orderDetail : orderDetailsByOrderId) {
                 OrderProductsResponseModel product = new OrderProductsResponseModel();
                 product.setName(orderDetail.getProduct().getName());
                 product.setPrice(orderDetail.getProduct().getPrice());
                 product.setQuantity(orderDetail.getQuantity());
-                
+
                 orderProducts.add(product);
             }
-            
+
             orderResponseModel.setProducts(orderProducts);
 
             orders.add(orderResponseModel);
@@ -239,11 +266,10 @@ public class OrdersService {
 
         RevisionModel revisionModel = revisionRepository.findByOrder_Id(orderId);
         StatusModel statusModel = statusRepository.findById(Long.valueOf(newStatusId)).orElseThrow(() -> new IllegalArgumentException("Invalid status"));
+        OrderModel orderModel = ordersRepository.findById(Long.valueOf(orderId)).orElseThrow(() -> new IllegalArgumentException("Invalid order"));
 
         // Solo cuando la orden es aprobada o rechazada por el aprobador jefe ya que debe pasar a un aprobador financiero
         if (revisionModel.getStatus().getId() == 1 && (newStatusId == 3 || newStatusId == 5)) {
-
-            OrderModel orderModel = ordersRepository.findById(Long.valueOf(orderId)).orElseThrow(() -> new IllegalArgumentException("Invalid order"));
 
             FinancialRangeModel range = financialRangeRepository.findByMinLessThanEqualAndMaxGreaterThanEqual(orderModel.getTotalAmount(), orderModel.getTotalAmount()).orElseThrow(() -> new IllegalArgumentException("Invalid amount"));
 
@@ -256,6 +282,16 @@ public class OrdersService {
 
             revisionModel.setUser(financialApproverUser);
 
+            UserModel newApprover = revisionModel.getUser();
+            String approverSubject = String.format("💰 Orden #%d Requerida para Aprobación Financiera", orderId);
+            String approverBody = String.format(
+                    "Estimado(a) %s,\n\nLa orden de compra #%d requiere su aprobación financiera. Monto: %s.",
+                    newApprover.getNombre(),
+                    orderId,
+                    orderModel.getTotalAmount().toString()
+            );
+            sendEmailAsync(orderId, newApprover.getCorreo(), approverSubject, approverBody);
+
         }
 
         NotificationModel notificationModel = notificationsRepository.findByOrder_Id(orderId);
@@ -267,5 +303,31 @@ public class OrdersService {
         revisionModel.setComentario(comments);
         revisionRepository.save(revisionModel);
 
+        UserModel buyerUser = orderModel.getUser();
+        String subject = String.format("🔔 Estado de Orden #%d Actualizado", orderId);
+        String body = String.format(
+                "Estimado(a) %s,\n\nEl estado de su orden de compra #%d ha sido actualizado a: **%s**.\n"
+                + "Comentarios: %s",
+                buyerUser.getNombre(),
+                orderId,
+                statusModel.getStatus(),
+                comments
+        );
+        String body2 = String.format(
+                "Estimado(a) %s,\n\nEl estado de la orden de compra #%d ha sido actualizado a: **%s**.\n"
+                + "Comentarios: %s",
+                buyerUser.getNombre(),
+                orderId,
+                statusModel.getStatus(),
+                comments
+        );
+
+        sendEmailAsync(orderId, buyerUser.getCorreo(), subject, body);
+        sendEmailAsync(orderId, revisionModel.getUser().getCorreo(), subject, body2);
+    }
+
+    @Async
+    public void sendEmailAsync(Integer orderId, String userEmail, String subject, String body) {
+        emailService.sendGenericEmail(userEmail, subject, body);
     }
 }

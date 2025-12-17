@@ -1,7 +1,9 @@
 package com.example.proveeduria_api.service;
 
 import com.example.proveeduria_api.models.NotificationModel;
+import com.example.proveeduria_api.models.NotificationResponseModel;
 import com.example.proveeduria_api.repository.NotificationsRepository;
+import java.util.ArrayList;
 import java.util.List;
 import org.springframework.stereotype.Service;
 
@@ -26,7 +28,21 @@ public class NotificationsService {
      * @param idUsuario ID del usuario
      * @return lista de notificaciones
      */
-    public List<NotificationModel> getNotificationsPerUser(Integer idUsuario) {
-        return repository.findByUser_Id(idUsuario);
+    public List<NotificationResponseModel> getNotificationsPerUser(Integer idUsuario) {
+        final List<NotificationModel> rawNotifications = repository.findByUser_Id(idUsuario);
+        
+        List<NotificationResponseModel> notifications = new ArrayList<>();
+        
+        for (var notification : rawNotifications) {
+            NotificationResponseModel notificationResponseModel = new NotificationResponseModel();
+            notificationResponseModel.setId(notification.getId());
+            notificationResponseModel.setMensaje(notification.getMensaje());
+            notificationResponseModel.setOrderId(notification.getOrder().getId());
+            notificationResponseModel.setSentDate(notification.getSentDate());
+            
+            notifications.add(notificationResponseModel);
+        }
+        
+        return notifications;
     }
 }
